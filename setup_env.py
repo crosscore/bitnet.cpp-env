@@ -47,7 +47,9 @@ ARCH_ALIAS = {
 }
 
 def system_info():
-    return platform.system(), ARCH_ALIAS.get(platform.machine(), "unknown")
+    system, machine = platform.system(), platform.machine()
+    arch = ARCH_ALIAS.get(machine, "unknown")
+    return system, arch
 
 def get_model_name():
     if args.hf_repo:
@@ -176,7 +178,21 @@ def compile():
         logging.error(f"Arch {arch} is not supported yet")
         exit(0)
     logging.info("Compiling the code using CMake.")
-    run_command(["cmake", "-B", "build", *COMPILER_EXTRA_ARGS[arch], *OS_EXTRA_ARGS.get(platform.system(), [])], log_step="generate_build_files")
+
+    # Add flags to include standard headers globally
+    c_flags = "-include stdlib.h -include string.h"
+    cxx_flags = "-include stdlib.h -include string.h"
+
+    cmake_command = [
+        "cmake",
+        "-B", "build",
+        *COMPILER_EXTRA_ARGS[arch],
+        *OS_EXTRA_ARGS.get(platform.system(), []),
+        f"-DCMAKE_C_FLAGS={c_flags}",
+        f"-DCMAKE_CXX_FLAGS={cxx_flags}"
+    ]
+
+    run_command(cmake_command, log_step="generate_build_files")
     run_command(["cmake", "--build", "build", "--config", "Release"], log_step="compile")
 
 def main():

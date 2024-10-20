@@ -8,8 +8,8 @@ RUN apt-get update && \
         make \
         bash \
         build-essential \
+        libstdc++-12-dev \
         libc6-dev \
-        libstdc++-dev \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install huggingface_hub
@@ -24,10 +24,6 @@ RUN pip3 install -r requirements.txt
 
 # 改良済みのsetup_env.pyをcopy
 COPY setup_env.py /app/BitNet/
-
-COPY entrypoint.sh /app/BitNet/
-
-# ENTRYPOINT ["./entrypoint.sh"]
 
 RUN echo "alias ls='ls --color=auto'" >> ~/.bashrc && \
     echo "alias ll='ls -alF'" >> ~/.bashrc && \
