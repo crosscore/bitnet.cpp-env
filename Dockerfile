@@ -19,6 +19,6 @@ COPY setup_env.py /app/BitNet/
 
 COPY entrypoint.sh /app/BitNet/
 
-ENTRYPOINT ["./entrypoint.sh"]
+# ENTRYPOINT ["./entrypoint.sh"]
 
 CMD ["tail", "-f", "/dev/null"]
