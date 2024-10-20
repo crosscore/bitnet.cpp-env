@@ -121,7 +121,7 @@ def prepare_model():
                 else:
                     quantize_cmd = ["./build/bin/Release/llama-quantize", "--token-embedding-type", "f16", f32_model, i2s_model, "I2_S", "1", "1"] if quant_embd else ["./build/bin/Release/llama-quantize", f32_model, i2s_model, "I2_S", "1"]
                 run_command(quantize_cmd, log_step="quantize_to_i2s")
-        logging.info(f"GGUF model saved at {gguf_path}")
+    logging.info(f"GGUF model saved at {gguf_path}")
 
 def setup_gguf():
     # Install the pip package
