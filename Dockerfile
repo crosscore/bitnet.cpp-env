@@ -1,8 +1,16 @@
 FROM python:3.12-slim
 
 RUN apt-get update && \
-    apt-get install -y git cmake clang make bash && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y \
+        git \
+        cmake \
+        clang \
+        make \
+        bash \
+        build-essential \
+        libc6-dev \
+        libstdc++-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install huggingface_hub
 
