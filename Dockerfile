@@ -1,41 +1,25 @@
 # bitnet.cpp-env/Dockerfile
 
-FROM python:3.12-slim
+FROM ubuntu:22.04
 
-ENV DEBIAN_FRONTEND=noninteractive
-ENV LANG=C.UTF-8
-ENV MODEL_DIR=/app/models
-ENV HF_REPO=HF1BitLLM/Llama3-8B-1.58-100B-tokens
-ENV QUANT_TYPE=i2_s
+RUN apt-get update && \
+    apt-get install -y python3 python3-pip git cmake clang make && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    cmake \
-    clang \
-    git \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+RUN pip3 install huggingface_hub
 
 WORKDIR /app
 
-COPY BitNet/requirements.txt /app/BitNet/requirements.txt
+RUN git clone --recursive https://github.com/microsoft/BitNet.git
 
-RUN pip install --upgrade pip && \
-    pip install -r /app/BitNet/requirements.txt
+WORKDIR /app/BitNet
 
-COPY BitNet/ /app/BitNet/
+RUN pip3 install -r requirements.txt
 
-RUN mkdir -p $MODEL_DIR
+# 改良したsetup_env.pyをコンテナにコピー
+COPY setup_env.py /app/BitNet/
 
-# Setting environment variables
-ARG HF_REPO_ARG=HF1BitLLM/Llama3-8B-1.58-100B-tokens
-ARG QUANT_TYPE_ARG=i2_s
-ENV HF_REPO=${HF_REPO_ARG}
-ENV QUANT_TYPE=${QUANT_TYPE_ARG}
-
-# Downloading the model, quantizing it, and building the project
-RUN python /app/BitNet/setup_env.py --hf-repo $HF_REPO --model-dir $MODEL_DIR --quant-type $QUANT_TYPE
-
-ENV PATH="/app/BitNet/build/bin:${PATH}"
+# setup_env.pyを実行（モデルが既に存在する場合はダウンロードと量子化をスキップ）
+RUN python3 setup_env.py --hf-repo HF1BitLLM/Llama3-8B-1.58-100B-tokens -q i2_s
 
 CMD ["tail", "-f", "/dev/null"]

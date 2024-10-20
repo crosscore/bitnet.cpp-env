@@ -1,17 +1,10 @@
 # bitnet.cpp-env/docker-compose.yml
+
 services:
   bitnet:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        HF_REPO_ARG: ${HF_REPO:-HF1BitLLM/Llama3-8B-1.58-100B-tokens}  # デフォルトのモデル名
-        QUANT_TYPE_ARG: ${QUANT_TYPE:-i2_s}                            # デフォルトの量子化タイプ
-    container_name: bitnet_container
+    build: .
+    container_name: bitnet
     volumes:
-      - ./BitNet:/app/BitNet           # BitNet コードをマウント
-      - ./models:/app/models           # モデルディレクトリをマウント
-    environment:
-      - HF_REPO=${HF_REPO:-HF1BitLLM/Llama3-8B-1.58-100B-tokens}
-      - QUANT_TYPE=${QUANT_TYPE:-i2_s}
-    tty: true                          # インタラクティブなセッションを可能に
+      - ./models:/app/BitNet/models
+    stdin_open: true
+    tty: true
