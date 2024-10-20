@@ -1,7 +1,7 @@
-FROM ubuntu:22.04
+FROM python:3.12-slim
 
 RUN apt-get update && \
-    apt-get install -y python3 python3-pip git cmake clang make bash && \
+    apt-get install -y git cmake clang make bash && \
     rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install huggingface_hub
