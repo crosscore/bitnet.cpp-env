@@ -6,5 +6,6 @@ services:
     container_name: bitnet
     volumes:
       - ./models:/app/BitNet/models
+      - ./logs:/app/BitNet/logs
     stdin_open: true
     tty: true
