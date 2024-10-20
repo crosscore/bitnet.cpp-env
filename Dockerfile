@@ -16,7 +16,7 @@ WORKDIR /app/BitNet
 
 RUN pip3 install -r requirements.txt
 
-# 改良したsetup_env.pyをコンテナにコピー
+# 改良済みのsetup_env.pyをcopy
 COPY setup_env.py /app/BitNet/
 
 # setup_env.pyを実行（モデルが既に存在する場合はダウンロードと量子化をスキップ）
